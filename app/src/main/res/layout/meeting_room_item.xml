@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/meeting_room_item_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_room"
+        tools:tint = "@array/color_rooms"/>
+
+    <TextView
+        android:id="@+id/meeting_room_item_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/meeting_room_item_imageview"
+        app:layout_constraintStart_toEndOf="@id/meeting_room_item_imageview"
+        tools:text="Salle 0"/>
+
+    <TextView
+        android:id="@+id/meeting_room_item_capacity_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/meeting_room_item_name_tv"
+        app:layout_constraintStart_toStartOf="@id/meeting_room_item_name_tv"
+        tools:text="Capacité: 12"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
