@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MaReu</string>
+    <string name="topic_hint">Sujet de la réunion</string>
+    <string name="participants_hint">Participants</string>
+    <string name="meeting_title">%s - %s - %s</string>
+    <string name="date_hint">Date</string>
+    <string name="hour_hint">Time</string>
+</resources>

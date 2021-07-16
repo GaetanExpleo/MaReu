@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="FABbackground">#CE0A24</color>
+
+    <!-- room color
+    <color name="room0">#4CDD6B</color>
+    <color name="room1">#77F4DC</color>
+    <color name="room2">#812BBD</color>
+    <color name="room3">#0A115D</color>
+    <color name="room4">#C3BD4B</color>
+    <color name="room5">#FF9800</color>
+    <color name="room6">#933800</color>
+    <color name="room7">#03A9F4</color>-->
+
+    <array name="color_rooms">
+        <item>#4CDD6B</item>
+        <item>#77F4DC</item>
+        <item>#812BBD</item>
+        <item>#0A115D</item>
+        <item>#C3BD4B</item>
+        <item>#FF9800</item>
+        <item>#933800</item>
+        <item>#03A9F4</item>
+    </array>
+
+    <array name="color_accent_rooms">
+        <item>#804CDD6B</item>
+        <item>#8077F4DC</item>
+        <item>#80812BBD</item>
+        <item>#800A115D</item>
+        <item>#80C3BD4B</item>
+        <item>#80FF9800</item>
+        <item>#80933800</item>
+        <item>#8003A9F4</item>
+    </array>
+
+</resources>
+
+<!-- @color/room0
+@color/room1
+@color/room2
+@color/room3
+@color/room4
+@color/room5
+@color/room6
+@color/room7-->
