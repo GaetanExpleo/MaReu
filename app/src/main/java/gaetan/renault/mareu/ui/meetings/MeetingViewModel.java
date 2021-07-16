@@ -12,21 +12,22 @@ import gaetan.renault.mareu.Repository.MeetingRepository;
 
 public class MeetingViewModel extends ViewModel {
 
-//    @NonNull
+    //    @NonNull
 //    private final Application mApplication;
     @NonNull
-    private final MeetingRepository mMeetingRepository = MeetingRepository.getInstance();
-    private LiveData<List<Meeting>> mMeetings = new MutableLiveData<>();
+    private final MeetingRepository mMeetingRepository;
+    private LiveData<List<Meeting>> mMeetings;
 
-    public MeetingViewModel() {
+    public MeetingViewModel(MeetingRepository meetingRepository) {
+        mMeetingRepository = meetingRepository;
         mMeetings = mMeetingRepository.getMeetings();
     }
 
-    public void onDeleteMeetingClicked(int meetingId){
+    public void onDeleteMeetingClicked(int meetingId) {
         mMeetingRepository.deleteMeeting(meetingId);
     }
 
-    public LiveData<List<Meeting>> getMeetings(){
+    public LiveData<List<Meeting>> getMeetings() {
         return mMeetings;
     }
 }

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.Model.Room;
 
-public class MeetingRepository  {
+public class MeetingRepository {
 
     private final MutableLiveData<List<Meeting>> mMeetingLiveData = new MutableLiveData<>();
     private int id = 0;
@@ -20,11 +19,11 @@ public class MeetingRepository  {
     private MeetingRepository() {
     }
 
-    private static class MeetingRepositoryHolder{
+    private static class MeetingRepositoryHolder {
         private final static MeetingRepository INSTANCE = new MeetingRepository();
     }
 
-    public static synchronized MeetingRepository getInstance(){
+    public static synchronized MeetingRepository getInstance() {
         return MeetingRepositoryHolder.INSTANCE;
     }
 
@@ -32,16 +31,15 @@ public class MeetingRepository  {
             @NonNull String topic,
             @NonNull long time,
             @NonNull List<String> participants,
-            @NonNull Room room) {
-
+            @NonNull Room room
+    ) {
         List<Meeting> currentList = mMeetingLiveData.getValue();
 
         if (currentList == null) {
             currentList = new ArrayList<>();
         }
 
-        currentList.add(new Meeting(id, topic, participants, time, room));
-        id++;
+        currentList.add(new Meeting(++id, topic, participants, time, room));
 
         mMeetingLiveData.setValue(currentList);
     }

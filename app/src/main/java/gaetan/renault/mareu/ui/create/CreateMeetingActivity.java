@@ -17,6 +17,7 @@ import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.Repository.RoomRepository;
+import gaetan.renault.mareu.ViewModelFactory;
 import gaetan.renault.mareu.databinding.ActivityCreateMeetingBinding;
 import gaetan.renault.mareu.utils.DatePickerFragment;
 import gaetan.renault.mareu.utils.TimePickerFragment;
@@ -26,7 +27,6 @@ public class CreateMeetingActivity extends AppCompatActivity {
 
     private ActivityCreateMeetingBinding mBinding;
     private CreateMeetingViewModel mViewModel;
-    private RoomRepository mRoomRepository = RoomRepository.getInstance();
     private List<Room> rooms;
 
     @Override
@@ -37,8 +37,9 @@ public class CreateMeetingActivity extends AppCompatActivity {
 
         setContentView(mBinding.getRoot());
 
-        mViewModel = new ViewModelProvider(this).get(CreateMeetingViewModel.class);
-        rooms = mRoomRepository.getRooms();
+        mViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(CreateMeetingViewModel.class);
+
+        rooms = mViewModel.getRooms();
 
         mBinding.meetingTopicTiet.addTextChangedListener(new TextWatcher() {
             @Override

@@ -1,5 +1,11 @@
 package gaetan.renault.mareu.ui.meetings;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,32 +13,23 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import gaetan.renault.mareu.Repository.MeetingRepository;
-import gaetan.renault.mareu.databinding.ActivityListMeetingBinding;
-import gaetan.renault.mareu.ui.create.CreateMeetingActivity;
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.R;
 import gaetan.renault.mareu.ViewModelFactory;
+import gaetan.renault.mareu.databinding.ActivityListMeetingBinding;
+import gaetan.renault.mareu.ui.create.CreateMeetingActivity;
 
-public class MeetingsActivity extends AppCompatActivity implements OnMeetingDeleteListener{
+public class MeetingsActivity extends AppCompatActivity implements OnMeetingDeleteListener {
 
     private ActivityListMeetingBinding binding;
 
     private RecyclerView recyclerViewRoom;
     private RecyclerView recyclerViewHour;
-    private RecyclerView recyclerViewMeeting;
 
-    private MeetingRepository mMeetingRepository = MeetingRepository.getInstance();
     private MeetingViewModel mMeetingViewModel;
 
 
@@ -43,6 +40,8 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
         binding = ActivityListMeetingBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
+        mMeetingViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MeetingViewModel.class);
 
         initToolbar();
         initRecyclerViews();
@@ -55,25 +54,17 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
     }
 
     private void initRecyclerViews() {
-        recyclerViewMeeting = binding.listMeetingRecyclerview;
+        final RecyclerView recyclerViewMeeting = binding.listMeetingRecyclerview;
         MeetingsAdapter meetingsAdapter = new MeetingsAdapter(this);
         recyclerViewMeeting.setAdapter(meetingsAdapter);
 
-        mMeetingViewModel = new ViewModelProvider(this).get(MeetingViewModel.class);
+        mMeetingViewModel.getMeetings().observe(this, meetingsAdapter::submitList);
 
         recyclerViewRoom = binding.listMeetingRoomRecyclerview;
         RoomFilterAdapter roomFilterAdapter = new RoomFilterAdapter();
         recyclerViewRoom.setAdapter(roomFilterAdapter);
 
         recyclerViewHour = binding.listMeetingHourRecyclerview;
-
-        mMeetingViewModel.getMeetings().observe(this, new Observer<List<Meeting>>() {
-            @Override
-            public void onChanged(List<Meeting> meetings) {
-                meetingsAdapter.submitList(meetings);
-//                meetingsAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     private void initFab() {
@@ -92,7 +83,7 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.menu_filter_room:
                 if (recyclerViewRoom.getVisibility() == View.GONE) {
                     recyclerViewRoom.setVisibility(View.VISIBLE);
@@ -101,7 +92,7 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
                 }
                 return true;
             case R.id.menu_filter_hour:
-                if (recyclerViewHour.getVisibility() == View.GONE){
+                if (recyclerViewHour.getVisibility() == View.GONE) {
                     recyclerViewHour.setVisibility(View.VISIBLE);
                 } else {
                     recyclerViewHour.setVisibility(View.GONE);

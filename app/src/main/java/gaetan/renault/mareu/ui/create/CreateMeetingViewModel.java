@@ -5,19 +5,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.Repository.MeetingRepository;
+import gaetan.renault.mareu.Repository.RoomRepository;
 
 public class CreateMeetingViewModel extends ViewModel {
 
-    private MeetingRepository mRepository = MeetingRepository.getInstance();
+    private MeetingRepository mMeetingRepository;
+    private RoomRepository mRoomRepository;
 
     private String mTopic;
     private List<String> mParticipants = new ArrayList<>();
@@ -29,9 +29,13 @@ public class CreateMeetingViewModel extends ViewModel {
     private boolean isRoomOk = false;
 //    private boolean isTimeOk = false;
 
+    private List<Room> mRooms;
     private MutableLiveData<Boolean> meetingReadyToCreate = new MutableLiveData<>();
 
-    public CreateMeetingViewModel() {
+    public CreateMeetingViewModel(MeetingRepository meetingRepository, RoomRepository roomRepository) {
+        mMeetingRepository = meetingRepository;
+        mRoomRepository = roomRepository;
+        mRooms = mRoomRepository.getRooms();
         meetingReadyToCreate.setValue(false);
     }
 
@@ -86,11 +90,15 @@ public class CreateMeetingViewModel extends ViewModel {
     }
 
     public void onCreateButtonClicked() {
-        mRepository.addMeeting(mTopic, mTime, mParticipants, mRoom);
+        mMeetingRepository.addMeeting(mTopic, mTime, mParticipants, mRoom);
 
     }
 
     private void verifiedInputs() {
         meetingReadyToCreate.setValue(isTopicOk && isParticipantsOk);//&& isRoomOk && isTimeOk
+    }
+
+    public List<Room> getRooms() {
+        return mRooms;
     }
 }
