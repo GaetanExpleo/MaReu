@@ -1,7 +1,6 @@
 package gaetan.renault.mareu.ui.meetings;
 
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,16 @@ import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.R;
-import gaetan.renault.mareu.Repository.RoomRepository;
 
 public class RoomFilterAdapter extends RecyclerView.Adapter<RoomFilterAdapter.RoomFilterViewHolder> {
 
-    private final List<Room> mRoom = RoomRepository.getInstance().getRooms();
+    private final List<Room> mRooms;
     private int[] color;
     private int[] colorAccent;
+
+    public RoomFilterAdapter(List<Room> rooms) {
+        mRooms = rooms;
+    }
 
     @NonNull
     @Override
@@ -45,18 +47,18 @@ public class RoomFilterAdapter extends RecyclerView.Adapter<RoomFilterAdapter.Ro
                 colorAccent[position]
         };
 
-        ColorStateList colorStateList = new ColorStateList(states,colors);
+        ColorStateList colorStateList = new ColorStateList(states, colors);
 
         holder.mChip.setChipIconTint(colorStateList);
-        holder.mChip.setText(mRoom.get(position).getName());
+        holder.mChip.setText(mRooms.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return mRoom.size();
+        return mRooms.size();
     }
 
-    public class RoomFilterViewHolder extends RecyclerView.ViewHolder {
+    public static class RoomFilterViewHolder extends RecyclerView.ViewHolder {
 
         public final Chip mChip;
 

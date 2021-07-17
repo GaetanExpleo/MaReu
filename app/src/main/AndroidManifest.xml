@@ -9,12 +9,20 @@
         android:roundIcon="@mipmap/ic_reu"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".ui.create.CreateMeetingActivity"
+        <activity android:name=".ui.simplelist.SimpleListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.create.CreateMeetingActivity"
             android:label="Nouvelle réunion"
             android:parentActivityName=".ui.meetings.MeetingsActivity">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".ui.meetings.MeetingsActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.meetings.MeetingsActivity" />
         </activity>
         <activity android:name=".ui.meetings.MeetingsActivity">
             <intent-filter>

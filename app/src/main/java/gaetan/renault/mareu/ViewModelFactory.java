@@ -39,7 +39,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MeetingViewModel.class)) {
-            return (T) new MeetingViewModel(mMeetingRepository);
+            return (T) new MeetingViewModel(mMeetingRepository, mRoomRepository);
         }
         if (modelClass.isAssignableFrom(CreateMeetingViewModel.class)) {
             return (T) new CreateMeetingViewModel(mMeetingRepository, mRoomRepository);

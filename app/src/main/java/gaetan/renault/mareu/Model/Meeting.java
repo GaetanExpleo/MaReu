@@ -1,43 +1,65 @@
 package gaetan.renault.mareu.Model;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class Meeting {
 
     private final int id;
-    private final String mTopic;
-    private final List<String> mParticipants;
-    private final long mTime;
-    private final Room mRoom;
 
-    public Meeting(int id, String topic, List<String> participants, long time, Room room) {
+    @NonNull
+    private final String topic;
+
+    @NonNull
+    private final List<String> participants;
+
+    private final long time;
+
+    @NonNull
+    private final Room room;
+
+    public Meeting(int id, @NonNull String topic, @NonNull List<String> participants, long time, @NonNull Room room) {
         this.id = id;
-        this.mTime = time;
-        this.mRoom = room;
-        this.mTopic = topic;
-        this.mParticipants = participants;
+        this.topic = topic;
+        this.participants = participants;
+        this.time = time;
+        this.room = room;
     }
 
     public int getId() {
         return id;
     }
 
-    public Long getTime() {
-        return mTime;
-    }
-
+    @NonNull
     public String getTopic() {
-        return mTopic;
+        return topic;
     }
 
+    @NonNull
     public List<String> getParticipants() {
-        return mParticipants;
+        return participants;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    @NonNull
     public Room getRoom() {
-        return mRoom;
+        return room;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Meeting meeting = (Meeting) o;
+
+        if (getTime() != meeting.getTime()) return false;
+        if (!getTopic().equals(meeting.getTopic())) return false;
+        if (!getParticipants().equals(meeting.getParticipants())) return false;
+        return getRoom().equals(meeting.getRoom());
     }
 }

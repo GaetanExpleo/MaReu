@@ -16,8 +16,8 @@ import gaetan.renault.mareu.Repository.RoomRepository;
 
 public class CreateMeetingViewModel extends ViewModel {
 
-    private MeetingRepository mMeetingRepository;
-    private RoomRepository mRoomRepository;
+    private final MeetingRepository mMeetingRepository;
+    private final RoomRepository mRoomRepository;
 
     private String mTopic;
     private List<String> mParticipants = new ArrayList<>();
@@ -29,8 +29,8 @@ public class CreateMeetingViewModel extends ViewModel {
     private boolean isRoomOk = false;
 //    private boolean isTimeOk = false;
 
-    private List<Room> mRooms;
-    private MutableLiveData<Boolean> meetingReadyToCreate = new MutableLiveData<>();
+    private final List<Room> mRooms;
+    private final MutableLiveData<Boolean> meetingReadyToCreate = new MutableLiveData<>();
 
     public CreateMeetingViewModel(MeetingRepository meetingRepository, RoomRepository roomRepository) {
         mMeetingRepository = meetingRepository;

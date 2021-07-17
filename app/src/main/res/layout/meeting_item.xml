@@ -19,20 +19,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:src="@drawable/ic_room"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:tint="@array/color_rooms"
-            android:src="@drawable/ic_room" />
+            tools:tint="@array/color_rooms" />
 
-        <View
-            android:id="@+id/view"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0dp"
             android:orientation="horizontal"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintGuide_percent="0.5" />
+
 
         <TextView
             android:id="@+id/meeting_item_title_textview"
@@ -41,10 +41,10 @@
             android:layout_marginStart="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:text="Réunion A - 14h00 - Salle 0"
             android:theme="@style/TitleTextStyle"
-            app:layout_constraintBottom_toTopOf="@id/view"
-            app:layout_constraintStart_toEndOf="@id/meeting_item_imageview"/>
+            app:layout_constraintBottom_toTopOf="@id/guideline"
+            app:layout_constraintStart_toEndOf="@id/meeting_item_imageview"
+            tools:text="Réunion A - 14h00 - Salle 0" />
 
         <TextView
             android:id="@+id/meeting_item_participants_textview"
@@ -52,11 +52,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:text="maxime@lamzone.com, alex@lamzon.com"
             android:theme="@style/SubtitleTextStyle"
             app:layout_constraintEnd_toStartOf="@id/meeting_item_delete_button"
             app:layout_constraintStart_toStartOf="@id/meeting_item_title_textview"
-            app:layout_constraintTop_toBottomOf="@id/view" />
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            tools:text="maxime@lamzone.com, alex@lamzon.com" />
 
         <ImageButton
             android:id="@+id/meeting_item_delete_button"

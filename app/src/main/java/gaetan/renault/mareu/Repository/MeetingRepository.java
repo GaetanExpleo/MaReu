@@ -13,7 +13,8 @@ import gaetan.renault.mareu.Model.Room;
 
 public class MeetingRepository {
 
-    private final MutableLiveData<List<Meeting>> mMeetingLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Meeting>> mMeetingsMutableLiveData = new MutableLiveData<>();
+    private List<Meeting> mMeetings;
     private int id = 0;
 
     private MeetingRepository() {
@@ -29,30 +30,19 @@ public class MeetingRepository {
 
     public void addMeeting(
             @NonNull String topic,
-            @NonNull long time,
+            long time,
             @NonNull List<String> participants,
             @NonNull Room room
     ) {
-        List<Meeting> currentList = mMeetingLiveData.getValue();
+        if (mMeetings == null) mMeetings = new ArrayList<>();
 
-        if (currentList == null) {
-            currentList = new ArrayList<>();
-        }
+        mMeetings.add(new Meeting(++id, topic, participants, time, room));
 
-        currentList.add(new Meeting(++id, topic, participants, time, room));
-
-        mMeetingLiveData.setValue(currentList);
+        mMeetingsMutableLiveData.postValue(mMeetings);
     }
 
     public void deleteMeeting(int meetingId) {
-
-        List<Meeting> currentList = mMeetingLiveData.getValue();
-
-//        if (currentList == null) {
-//            currentList = new ArrayList<>();
-//        }
-
-        for (Iterator<Meeting> iterator = currentList.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Meeting> iterator = mMeetings.iterator(); iterator.hasNext(); ) {
             Meeting meeting = iterator.next();
 
             if (meeting.getId() == meetingId) {
@@ -61,11 +51,10 @@ public class MeetingRepository {
             }
         }
 
-
-        mMeetingLiveData.setValue(currentList);
+        mMeetingsMutableLiveData.setValue(mMeetings);
     }
 
     public LiveData<List<Meeting>> getMeetings() {
-        return mMeetingLiveData;
+        return mMeetingsMutableLiveData;
     }
 }

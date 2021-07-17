@@ -9,15 +9,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
-import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.R;
 import gaetan.renault.mareu.ViewModelFactory;
 import gaetan.renault.mareu.databinding.ActivityListMeetingBinding;
@@ -55,13 +52,13 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
 
     private void initRecyclerViews() {
         final RecyclerView recyclerViewMeeting = binding.listMeetingRecyclerview;
-        MeetingsAdapter meetingsAdapter = new MeetingsAdapter(this);
-        recyclerViewMeeting.setAdapter(meetingsAdapter);
+        final MeetingAdapter meetingAdapter = new MeetingAdapter(this);
+        recyclerViewMeeting.setAdapter(meetingAdapter);
 
-        mMeetingViewModel.getMeetings().observe(this, meetingsAdapter::submitList);
+        mMeetingViewModel.getMeetings().observe(this, meetingAdapter::submitList);
 
         recyclerViewRoom = binding.listMeetingRoomRecyclerview;
-        RoomFilterAdapter roomFilterAdapter = new RoomFilterAdapter();
+        RoomFilterAdapter roomFilterAdapter = new RoomFilterAdapter(mMeetingViewModel.getRooms());
         recyclerViewRoom.setAdapter(roomFilterAdapter);
 
         recyclerViewHour = binding.listMeetingHourRecyclerview;

@@ -1,30 +1,29 @@
 package gaetan.renault.mareu.Repository;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
-import gaetan.renault.mareu.R;
 
 public class RoomRepository {
 
-    private List<Room> mRooms;
+    private final List<Room> mRooms;
 
     public RoomRepository() {
-        mRooms = new ArrayList<>();
-
-        mRooms.add(new Room(0, "Salle 1", 5));
-        mRooms.add(new Room(1, "Salle 2", 6));
-        mRooms.add(new Room(2, "Salle 3", 10));
-        mRooms.add(new Room(3, "Salle 4", 3));
-        mRooms.add(new Room(4, "Salle 5", 8));
-        mRooms.add(new Room(5, "Salle 6", 12));
-        mRooms.add(new Room(6, "Salle 7", 5));
-        mRooms.add(new Room(7, "Salle 8", 2));
+        mRooms = Arrays.asList(
+                new Room(1, "Salle 1", 5),
+                new Room(2, "Salle 2", 6),
+                new Room(3, "Salle 3", 10),
+                new Room(4, "Salle 4", 3),
+                new Room(5, "Salle 5", 8),
+                new Room(6, "Salle 6", 12),
+                new Room(7, "Salle 7", 5),
+                new Room(8, "Salle 8", 2)
+        );
     }
 
-    private static class RoomRepositoryHolder{
-        private final static RoomRepository INSTANCE = new RoomRepository();
+    private static class RoomRepositoryHolder {
+        public static final  RoomRepository INSTANCE = new RoomRepository();
     }
 
     public static RoomRepository getInstance() {
