@@ -21,6 +21,8 @@ public class RoomRepository {
         mRooms.add(new Room(5, "Salle 6", 12));
         mRooms.add(new Room(6, "Salle 7", 5));
         mRooms.add(new Room(7, "Salle 8", 2));
+        mRooms.add(new Room(8, "Salle 9", 15));
+        mRooms.add(new Room(9, "Salle 10", 20));
     }
 
     private static class RoomRepositoryHolder{

@@ -1,5 +1,7 @@
 package gaetan.renault.mareu.Repository;
 
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,7 +14,7 @@ import java.util.List;
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.Model.Room;
 
-public class MeetingRepository  {
+public class MeetingRepository {
 
     private final MutableLiveData<List<Meeting>> mMeetingLiveData = new MutableLiveData<>();
     private int id = 0;
@@ -20,27 +22,27 @@ public class MeetingRepository  {
     private MeetingRepository() {
     }
 
-    private static class MeetingRepositoryHolder{
+    private static class MeetingRepositoryHolder {
         private final static MeetingRepository INSTANCE = new MeetingRepository();
     }
 
-    public static synchronized MeetingRepository getInstance(){
+    public static synchronized MeetingRepository getInstance() {
         return MeetingRepositoryHolder.INSTANCE;
     }
 
     public void addMeeting(
             @NonNull String topic,
-            @NonNull long time,
+            @NonNull long startMeeting,
+            @NonNull long endMeeting,
             @NonNull List<String> participants,
-            @NonNull Room room) {
+            @NonNull Room room
+    ) {
 
-        List<Meeting> currentList = mMeetingLiveData.getValue();
+        List<Meeting> currentList = new ArrayList<>();
+        if (mMeetingLiveData.getValue() != null)
+            currentList.addAll(mMeetingLiveData.getValue());
 
-        if (currentList == null) {
-            currentList = new ArrayList<>();
-        }
-
-        currentList.add(new Meeting(id, topic, participants, time, room));
+        currentList.add(new Meeting(id, topic, participants, startMeeting,endMeeting, room));
         id++;
 
         mMeetingLiveData.setValue(currentList);
@@ -48,11 +50,8 @@ public class MeetingRepository  {
 
     public void deleteMeeting(int meetingId) {
 
-        List<Meeting> currentList = mMeetingLiveData.getValue();
-
-//        if (currentList == null) {
-//            currentList = new ArrayList<>();
-//        }
+        List<Meeting> currentList = new ArrayList<>();
+        currentList.addAll(mMeetingLiveData.getValue());
 
         for (Iterator<Meeting> iterator = currentList.iterator(); iterator.hasNext(); ) {
             Meeting meeting = iterator.next();
@@ -63,11 +62,10 @@ public class MeetingRepository  {
             }
         }
 
-
         mMeetingLiveData.setValue(currentList);
     }
 
-    public LiveData<List<Meeting>> getMeetings() {
+    public LiveData<List<Meeting>> getMeetingsLiveData() {
         return mMeetingLiveData;
     }
 }

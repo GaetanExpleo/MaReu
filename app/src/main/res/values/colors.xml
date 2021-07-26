@@ -10,16 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="FABbackground">#CE0A24</color>
 
-    <!-- room color
-    <color name="room0">#4CDD6B</color>
-    <color name="room1">#77F4DC</color>
-    <color name="room2">#812BBD</color>
-    <color name="room3">#0A115D</color>
-    <color name="room4">#C3BD4B</color>
-    <color name="room5">#FF9800</color>
-    <color name="room6">#933800</color>
-    <color name="room7">#03A9F4</color>-->
-
     <array name="color_rooms">
         <item>#4CDD6B</item>
         <item>#77F4DC</item>
@@ -29,6 +19,8 @@
         <item>#FF9800</item>
         <item>#933800</item>
         <item>#03A9F4</item>
+        <item>#5C6B94</item>
+        <item>#F94E9E</item>
     </array>
 
     <array name="color_accent_rooms">
@@ -40,6 +32,8 @@
         <item>#80FF9800</item>
         <item>#80933800</item>
         <item>#8003A9F4</item>
+        <item>#805C6B94</item>
+        <item>#80F94E9E</item>
     </array>
 
 </resources>

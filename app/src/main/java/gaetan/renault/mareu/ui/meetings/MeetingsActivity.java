@@ -23,8 +23,12 @@ import gaetan.renault.mareu.ui.create.CreateMeetingActivity;
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.R;
 import gaetan.renault.mareu.ViewModelFactory;
+import gaetan.renault.mareu.utils.utility;
 
-public class MeetingsActivity extends AppCompatActivity implements OnMeetingDeleteListener{
+public class MeetingsActivity extends AppCompatActivity implements
+        MeetingsAdapter.DeleteMeetingListener,
+        RoomFilterAdapter.RoomSelectedListener,
+        HourFilterAdapter.HourSelectedListener {
 
     private ActivityListMeetingBinding binding;
 
@@ -59,19 +63,20 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
         MeetingsAdapter meetingsAdapter = new MeetingsAdapter(this);
         recyclerViewMeeting.setAdapter(meetingsAdapter);
 
-        mMeetingViewModel = new ViewModelProvider(this).get(MeetingViewModel.class);
+        mMeetingViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MeetingViewModel.class);
 
         recyclerViewRoom = binding.listMeetingRoomRecyclerview;
-        RoomFilterAdapter roomFilterAdapter = new RoomFilterAdapter();
+        RoomFilterAdapter roomFilterAdapter = new RoomFilterAdapter(this);
         recyclerViewRoom.setAdapter(roomFilterAdapter);
 
         recyclerViewHour = binding.listMeetingHourRecyclerview;
+        HourFilterAdapter hourFilterAdapter = new HourFilterAdapter(this);
+        recyclerViewHour.setAdapter(hourFilterAdapter);
 
-        mMeetingViewModel.getMeetings().observe(this, new Observer<List<Meeting>>() {
+        mMeetingViewModel.getMeetingsLiveData().observe(this, new Observer<List<Meeting>>() {
             @Override
             public void onChanged(List<Meeting> meetings) {
                 meetingsAdapter.submitList(meetings);
-//                meetingsAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -80,6 +85,13 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
         FloatingActionButton fab = findViewById(R.id.list_meeting_fab);
         fab.setOnClickListener(v -> {
             startActivity(new Intent(MeetingsActivity.this, CreateMeetingActivity.class));
+        });
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                utility.generateFalseMeeting();
+                return true;
+            }
         });
     }
 
@@ -92,7 +104,7 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.menu_filter_room:
                 if (recyclerViewRoom.getVisibility() == View.GONE) {
                     recyclerViewRoom.setVisibility(View.VISIBLE);
@@ -101,7 +113,7 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
                 }
                 return true;
             case R.id.menu_filter_hour:
-                if (recyclerViewHour.getVisibility() == View.GONE){
+                if (recyclerViewHour.getVisibility() == View.GONE) {
                     recyclerViewHour.setVisibility(View.VISIBLE);
                 } else {
                     recyclerViewHour.setVisibility(View.GONE);
@@ -113,7 +125,17 @@ public class MeetingsActivity extends AppCompatActivity implements OnMeetingDele
     }
 
     @Override
-    public void onDeleteMeetingClicked(int meetingId) {
+    public void onRoomSelected(int roomId) {
+        mMeetingViewModel.onRoomFilterSelected(roomId);
+    }
+
+    @Override
+    public void onDeleteMeting(int meetingId) {
         mMeetingViewModel.onDeleteMeetingClicked(meetingId);
+    }
+
+    @Override
+    public void onHourSelected(int hourSelected) {
+        mMeetingViewModel.onHourFilterSelected(hourSelected);
     }
 }

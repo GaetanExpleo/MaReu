@@ -3,6 +3,8 @@
     android:id="@+id/meeting_hour_item_textview"
     android:layout_width="48dp"
     android:layout_height="48dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:textStyle="bold">
 
 </TextView>

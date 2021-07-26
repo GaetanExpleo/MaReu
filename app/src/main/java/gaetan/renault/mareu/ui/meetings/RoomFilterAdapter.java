@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,11 @@ public class RoomFilterAdapter extends RecyclerView.Adapter<RoomFilterAdapter.Ro
     private final List<Room> mRoom = RoomRepository.getInstance().getRooms();
     private int[] color;
     private int[] colorAccent;
+    private final RoomSelectedListener mRoomSelectedListener;
+
+    public RoomFilterAdapter(RoomSelectedListener roomSelectedListener) {
+        mRoomSelectedListener = roomSelectedListener;
+    }
 
     @NonNull
     @Override
@@ -40,15 +46,24 @@ public class RoomFilterAdapter extends RecyclerView.Adapter<RoomFilterAdapter.Ro
                 new int[]{android.R.attr.state_checked}
         };
 
-        int[] colors = new int[]{
-                color[position],
+        int[] colorsBackground = new int[]{
+                0,
                 colorAccent[position]
         };
 
-        ColorStateList colorStateList = new ColorStateList(states,colors);
+        int[] colorsIcon = new int[]{
+                color[position],
+                color[position]
+        };
 
-        holder.mChip.setChipIconTint(colorStateList);
+        ColorStateList colorStateListBackground = new ColorStateList(states, colorsBackground);
+        ColorStateList colorStateListIcon = new ColorStateList(states, colorsIcon);
+
+        holder.mChip.setChipIconTint(colorStateListIcon);
+        holder.mChip.setChipBackgroundColor(colorStateListBackground);
         holder.mChip.setText(mRoom.get(position).getName());
+
+        holder.mChip.setOnCheckedChangeListener((buttonView, isChecked) -> mRoomSelectedListener.onRoomSelected(position));
     }
 
     @Override
@@ -64,5 +79,9 @@ public class RoomFilterAdapter extends RecyclerView.Adapter<RoomFilterAdapter.Ro
             super(itemView);
             mChip = itemView.findViewById(R.id.meeting_room_chip);
         }
+    }
+
+    public interface RoomSelectedListener {
+        void onRoomSelected(int roomId);
     }
 }

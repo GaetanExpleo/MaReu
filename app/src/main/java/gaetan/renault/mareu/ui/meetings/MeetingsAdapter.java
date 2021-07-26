@@ -1,6 +1,5 @@
 package gaetan.renault.mareu.ui.meetings;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +12,19 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.sql.Timestamp;
+
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.R;
-import gaetan.renault.mareu.databinding.MeetingItemBinding;
+import gaetan.renault.mareu.utils.utility;
 
 public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.MeetingViewHolder> {
 
-    private final OnMeetingDeleteListener mListener;
+    private final DeleteMeetingListener mListener;
 
     private int[] color;
 
-    public MeetingsAdapter(@NonNull OnMeetingDeleteListener listener) {
+    public MeetingsAdapter(@NonNull DeleteMeetingListener listener) {
         super(DIFF_CALLBACK);
         mListener = listener;
     }
@@ -36,10 +37,7 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
 
         @Override
         public boolean areContentsTheSame(@NonNull Meeting oldItem, @NonNull Meeting newItem) {
-            //TODO : to complete
-            return oldItem.getTopic().equals(newItem.getTopic()) &&
-                    oldItem.getParticipants().equals(newItem.getParticipants()) &&
-                    oldItem.getRoom().getId() == newItem.getRoom().getId();
+            return oldItem.equals(newItem);
         }
     };
 
@@ -54,13 +52,15 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
     @Override
     public void onBindViewHolder(@NonNull MeetingsAdapter.MeetingViewHolder holder, int position) {
         Meeting currentMeeting = getItem(position);
-        holder.mTitleMeeting.setText(currentMeeting.getTopic());
+        Timestamp timestamp = new Timestamp(currentMeeting.getStartMeeting());
+        String meetingHour = timestamp.getHours() + "h" + utility.formatOneInTwoNumber(timestamp.getMinutes());
+        holder.mTitleMeeting.setText(String.format("%s - %s - %s", currentMeeting.getTopic(),meetingHour,currentMeeting.getRoom().getName()));
         holder.mParticipantsMeeting.setText(currentMeeting.getParticipants().toString().replaceAll("\\[|\\]",""));
         holder.mMeetingImageView.setColorFilter(color[currentMeeting.getRoom().getId()]);
         holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDeleteMeetingClicked(currentMeeting.getId());
+                mListener.onDeleteMeting(currentMeeting.getId());
             }
         });
 
@@ -80,5 +80,9 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
             mParticipantsMeeting = itemView.findViewById(R.id.meeting_item_participants_textview);
             mDeleteButton = itemView.findViewById(R.id.meeting_item_delete_button);
         }
+    }
+
+    public interface DeleteMeetingListener{
+        void onDeleteMeting(int meetingId);
     }
 }

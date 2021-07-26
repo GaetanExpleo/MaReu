@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +18,15 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import gaetan.renault.mareu.R;
+import gaetan.renault.mareu.ViewModelFactory;
 import gaetan.renault.mareu.ui.create.CreateMeetingActivity;
+import gaetan.renault.mareu.ui.create.CreateMeetingViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,15 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        return new TimePickerDialog(getActivity(),this,hour,minute,false);
-    }
+        CreateMeetingViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(CreateMeetingViewModel.class);
 
-    @Override
-    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        CreateMeetingActivity activity = (CreateMeetingActivity) getActivity();
-        activity.processTimePickerResult(hour, minute);
+        return new TimePickerDialog(getActivity(), viewModel ,hour,minute,false);
     }
+//Todo : Supprimer si fonctionne avec le viewModel
+
+//    @Override
+//    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+//        CreateMeetingActivity activity = (CreateMeetingActivity) getActivity();
+//        activity.processTimePickerResult(hour, minute);
+//    }
 }
