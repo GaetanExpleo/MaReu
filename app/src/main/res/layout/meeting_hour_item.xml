@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/meeting_hour_item_textview"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
-    android:gravity="center"
-    android:textColor="@color/white"
-    android:textStyle="bold">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_marginHorizontal="5dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
 
-</TextView>
+    <TextView
+        android:id="@+id/meeting_hour_item_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/gray"
+        android:textStyle="bold"/>
+
+    <View
+        android:id="@+id/meeting_hour_item_view"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/white"
+        android:layout_gravity="bottom"
+        android:visibility="invisible"
+        tools:background="@color/colorPrimary"
+        />
+</LinearLayout>

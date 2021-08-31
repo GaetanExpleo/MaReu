@@ -2,22 +2,15 @@ package gaetan.renault.mareu.ui.create;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Constraints;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SpinnerAdapter;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
@@ -25,9 +18,7 @@ import gaetan.renault.mareu.R;
 import gaetan.renault.mareu.Repository.RoomRepository;
 import gaetan.renault.mareu.ViewModelFactory;
 import gaetan.renault.mareu.databinding.ActivityCreateMeetingBinding;
-import gaetan.renault.mareu.utils.DatePickerFragment;
-import gaetan.renault.mareu.utils.TimePickerFragment;
-import gaetan.renault.mareu.utils.utility;
+import gaetan.renault.mareu.utils.DurationDialog;
 
 public class CreateMeetingActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -76,6 +67,12 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+//        mBinding.meetingParticipantsTiet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//
+//            }
+//        });
         mBinding.meetingParticipantsTiet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,26 +90,22 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-//        mBinding.dateTiet.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                try {
-//                    mViewModel.onDateChanged(s.toString(), "date");
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+        mBinding.dateTiet.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mViewModel.onDateChanged(s.toString());
+            }
+        });
 
         mBinding.timeTiet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -125,11 +118,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    mViewModel.onDateChanged(s.toString(), "time");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                mViewModel.onTimeChanged(s.toString());
             }
         });
 
@@ -157,13 +146,8 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
             mBinding.roomSpinner.setAdapter(adapter);
         });
         mViewModel.isRoomReadyToBeSelected().observe(this, isReady -> mBinding.roomSpinner.setEnabled(isReady));
-        mViewModel.getDateLiveData().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String date) {
-                mBinding.dateTiet.setText(date);
-            }
-        });
-        mViewModel.getTimeLiveData().observe(this, time -> mBinding.dateTiet.setText(time));
+        mViewModel.getDateLiveData().observe(this, date -> mBinding.dateTiet.setText(date));
+        mViewModel.getTimeLiveData().observe(this, time -> mBinding.timeTiet.setText(time));
     }
 
     private void initToolbar() {
@@ -197,33 +181,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    private void showDatePicker() {
-        DialogFragment dateFragment = new DatePickerFragment();
-        dateFragment.show(getSupportFragmentManager(), "datePicker");
-    }
-
-//    public void processDatePickerResult(int day, int month, int year) {
-//        String day_string = utility.formatOneInTwoNumber(day);
-//        String month_string = utility.formatOneInTwoNumber(month + 1);
-//        String year_string = Integer.toString(year);
-//        String dateMessage = (day_string + "/" + month_string + "/" + year_string);
-//
-//        mBinding.dateTiet.setText(dateMessage);
-//    }
-
-    private void showTimePicker() {
-        DialogFragment timeFragment = new TimePickerFragment();
-        timeFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    public void processTimePickerResult(int hour, int minute) {
-        String hour_string = utility.formatOneInTwoNumber(hour);
-        String minute_string = utility.formatOneInTwoNumber(minute);
-        String timeMessage = (hour_string + ":" + minute_string);
-
-        mBinding.timeTiet.setText(timeMessage);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -232,13 +189,14 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
                 finish();
                 break;
             case R.id.date_tiet:
-                showDatePicker();
+                mViewModel.showDatePicker(this);
                 break;
             case R.id.time_tiet:
-                showTimePicker();
+                mViewModel.showTimePicker(this);
                 break;
             case R.id.duration_tiet:
-                mViewModel.onDurationEntered(this, mBinding.durationTiet.getText().toString());
+                DurationDialog durationDialog = new DurationDialog();
+                durationDialog.show(getSupportFragmentManager(),"duration dialog");
                 break;
             default:
                 return;

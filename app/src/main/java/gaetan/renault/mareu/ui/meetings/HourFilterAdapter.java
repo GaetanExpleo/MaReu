@@ -1,5 +1,6 @@
 package gaetan.renault.mareu.ui.meetings;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import gaetan.renault.mareu.R;
 public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.HourFilterViewHolder> {
 
     private final HourSelectedListener mListener;
-    private static final List<Integer> sHourList = new ArrayList<Integer>(Arrays.asList(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
+    private static final List<Integer> sHourList = new ArrayList<>(Arrays.asList(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
 
     public HourFilterAdapter(HourSelectedListener listener) {
         mListener = listener;
@@ -39,8 +40,18 @@ public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.Ho
             @Override
             public void onClick(View v) {
                 mListener.onHourSelected(currentHour);
+                v.setSelected(!v.isSelected());
+                if (v.isSelected()){
+                    holder.mTextView.setTextColor(v.getResources().getColor(R.color.white));
+                    holder.mView.setVisibility(View.VISIBLE);
+                } else {
+                    holder.mTextView.setTextColor(v.getResources().getColor(R.color.gray));
+                    holder.mView.setVisibility(View.INVISIBLE);
+                }
             }
         });
+
+
     }
 
     @Override
@@ -51,10 +62,12 @@ public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.Ho
     public class HourFilterViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView mTextView;
+        private final View mView;
 
         public HourFilterViewHolder(@NonNull View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.meeting_hour_item_textview);
+            mView = itemView.findViewById(R.id.meeting_hour_item_view);
         }
     }
 

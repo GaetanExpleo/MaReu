@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -57,13 +58,19 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
         holder.mTitleMeeting.setText(String.format("%s - %s - %s", currentMeeting.getTopic(),meetingHour,currentMeeting.getRoom().getName()));
         holder.mParticipantsMeeting.setText(currentMeeting.getParticipants().toString().replaceAll("\\[|\\]",""));
         holder.mMeetingImageView.setColorFilter(color[currentMeeting.getRoom().getId()]);
-        holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+        holder.mDeleteButton.setOnClickListener(v -> mListener.onDeleteMeting(currentMeeting.getId()));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDeleteMeting(currentMeeting.getId());
+                Toast.makeText(v.getContext(), toastMessage(currentMeeting), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private String toastMessage(Meeting currentMeeting) {
+        return "id: " + currentMeeting.getId() + " startMeeting: " + utility.formatDate(currentMeeting.getStartMeeting(),"HH:mm") +
+                "\nendMeeting: " + utility.formatDate(currentMeeting.getEndMeeting(),"HH:mm");
     }
 
     public class MeetingViewHolder extends RecyclerView.ViewHolder {

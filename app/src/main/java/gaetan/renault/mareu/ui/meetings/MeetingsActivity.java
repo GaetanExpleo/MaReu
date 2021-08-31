@@ -1,6 +1,7 @@
 package gaetan.renault.mareu.ui.meetings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -73,12 +74,7 @@ public class MeetingsActivity extends AppCompatActivity implements
         HourFilterAdapter hourFilterAdapter = new HourFilterAdapter(this);
         recyclerViewHour.setAdapter(hourFilterAdapter);
 
-        mMeetingViewModel.getMeetingsLiveData().observe(this, new Observer<List<Meeting>>() {
-            @Override
-            public void onChanged(List<Meeting> meetings) {
-                meetingsAdapter.submitList(meetings);
-            }
-        });
+        mMeetingViewModel.getMeetingsLiveData().observe(this, meetings -> meetingsAdapter.submitList(meetings));
     }
 
     private void initFab() {
@@ -86,12 +82,9 @@ public class MeetingsActivity extends AppCompatActivity implements
         fab.setOnClickListener(v -> {
             startActivity(new Intent(MeetingsActivity.this, CreateMeetingActivity.class));
         });
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                utility.generateFalseMeeting();
-                return true;
-            }
+        fab.setOnLongClickListener(v -> {
+            utility.generateFalseMeeting();
+            return true;
         });
     }
 
@@ -137,5 +130,10 @@ public class MeetingsActivity extends AppCompatActivity implements
     @Override
     public void onHourSelected(int hourSelected) {
         mMeetingViewModel.onHourFilterSelected(hourSelected);
+    }
+
+    @VisibleForTesting
+    public void addSomeMeetings(){
+
     }
 }

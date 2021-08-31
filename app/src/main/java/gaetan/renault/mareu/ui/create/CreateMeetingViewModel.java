@@ -3,30 +3,28 @@ package gaetan.renault.mareu.ui.create;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.util.Patterns;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.Constraints;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.Repository.MeetingRepository;
 import gaetan.renault.mareu.Repository.RoomRepository;
 import gaetan.renault.mareu.utils.DatePickerFragment;
+import gaetan.renault.mareu.utils.TimePickerFragment;
 import gaetan.renault.mareu.utils.utility;
 
 public class CreateMeetingViewModel extends ViewModel implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -37,7 +35,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     private static final long MINUTE_TO_MILLIS = 60000;
     private static final String EMAIL_FORMAT = ".+@.+\\..+";
     private static final String DATE_FORMAT = "dd/MM/yyyy";
-    private static final String TIME_FORMAT = "hh:mm";
+    private static final String TIME_FORMAT = "HH:mm";
 
     private String mTopic;
     private final List<String> mParticipants = new ArrayList<>();
@@ -45,11 +43,8 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     private long mStartMeeting;
     private long mDuration;
 
-    private int mHourNumberPicker;
-    private int mMinuteNumberPicker;
+    private int mHour = 0, mMinute = 45;
     private Calendar mCalendar;
-
-    private long mDate = 0, mTime = 0;
 
     private boolean isTopicOk = false;
     private boolean isParticipantsOk = false;
@@ -62,6 +57,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     private final MutableLiveData<String> mDurationMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mRoomReadyToBeSelected = new MutableLiveData<>();
     private final MutableLiveData<List<Room>> mRoomsListMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> mParticipantMutableLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<String> mDateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> mTimeMutableLiveData = new MutableLiveData<>();
@@ -73,6 +69,8 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         mMeetingReadyToCreate.setValue(false);
         mRoomReadyToBeSelected.setValue(false);
         mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.MILLISECOND, 0);
     }
 
     public void onTopicChanged(@NonNull String topic) {
@@ -83,7 +81,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     }
 
     public void onParticipantsChanged(@NonNull String participants) {
-        //todo : emailaddress to verify
+        String participantsText = "";
         mParticipants.clear();
 
         String[] participantsList = participants.split("[,; \n]");
@@ -91,75 +89,37 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         for (String participant : participantsList) {
             String participantCleaned = participant.trim();
 
-            if (!participantCleaned.isEmpty()) {
+            if (!participantCleaned.isEmpty() && isValidEmail(participantCleaned)) {
                 mParticipants.add(participantCleaned);
+                if (participantsText == "") {
+                    participantsText = participantCleaned;
+                } else {
+                    participantsText += ("; " + participantCleaned);
+                }
             }
         }
+
 
         isParticipantsOk = (mParticipants.size() > 0);
         verifiedInputs();
     }
 
-    public void onRoomChanged(@NonNull Room room) {
-        this.mRoom = room;
-
-        isRoomOk = (mRoom != null);
-        verifiedInputs();
+    private boolean isValidEmail(String emailAddress) {
+        return emailAddress != null && Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches();
     }
 
-    public void onDateChanged(String input, String inputType) throws ParseException {
-//        if (inputType == "date") {
-//            //
-//            mDate = new SimpleDateFormat("dd/MM/yyyy").parse(input).getTime();
-//
-//            isDateOk = !input.isEmpty();
-//        } else if (inputType == "time") {
-//            //
-//            mTime = new SimpleDateFormat("hh:mm").parse(input).getTime();
-//
-//            isTimeOk = !input.isEmpty();
-//        }
-//
-//        if (isTimeOk && isDateOk) {
-//            mStartMeeting = mDate + mTime;
-//        }
+    public void onDateChanged(@NonNull String date) {
+        isDateOk = (!date.isEmpty());
 
         verifiedInputs();
         updateListOfRoomSelectable();
     }
 
-    public void onCreateButtonClicked() {
-        mMeetingRepository.addMeeting(mTopic, mStartMeeting,
-                endMeetingCalculation(mStartMeeting, mDuration), mParticipants, mRoom);
+    public void onTimeChanged(@NonNull String time) {
+        isTimeOk = (!time.isEmpty());
 
-    }
-
-    public void onDurationEntered(Context context, String duration) {
-        mHourNumberPicker = 0;
-        mMinuteNumberPicker = 15;
-        DurationListener listener = new DurationListener() {
-            @Override
-            public void durationEntered(String duration) {
-                mDurationMutableLiveData.setValue(duration);
-            }
-        };
-
-        if (!duration.isEmpty()) {
-            Matcher matchHour = Pattern.compile("(\\d{0,2}) h.*").matcher(duration);
-            if (matchHour.matches()) {
-                mHourNumberPicker = Integer.parseInt(matchHour.group(1));
-            }
-
-            Matcher matchMinute = Pattern.compile("(\\d{0,2} h )?(\\d{0,2}) min").matcher(duration);
-            if (matchMinute.matches()) {
-                mMinuteNumberPicker = Integer.parseInt(matchMinute.group(2));
-            } else {
-                mMinuteNumberPicker = 0;
-            }
-        }
-        final DurationDialog dialog = new DurationDialog(context, listener, mHourNumberPicker, mMinuteNumberPicker);
-        dialog.show();
-        dialog.getWindow().setLayout(Constraints.LayoutParams.MATCH_PARENT, Constraints.LayoutParams.WRAP_CONTENT);
+        verifiedInputs();
+        updateListOfRoomSelectable();
     }
 
     public void onDurationChanged(String s) {
@@ -169,13 +129,49 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         updateListOfRoomSelectable();
     }
 
+    public void onRoomChanged(@NonNull Room room) {
+        this.mRoom = room;
+
+        isRoomOk = (mRoom != null);
+        verifiedInputs();
+    }
+
+    public void onDurationOkClicked(int hour, int minute) {
+        mHour = hour;
+        mMinute = minute * 15;
+
+        String strHour = "";
+        String strMinute = "";
+
+        if (mHour != 0) {
+            strHour = String.valueOf(mHour) + " h";
+        }
+
+        if (mMinute != 0) {
+            strMinute = String.valueOf(mMinute) + " min";
+        }
+
+        if (mHour != 0 && mMinute != 0) {
+            mDurationMutableLiveData.setValue(strHour + " " + strMinute);
+        } else {
+            mDurationMutableLiveData.setValue(strHour + strMinute);
+        }
+
+        durationToLong();
+    }
+
+    public void onCreateButtonClicked() {
+        mStartMeeting = mCalendar.getTimeInMillis();
+        mMeetingRepository.addMeeting(mTopic, mStartMeeting, endMeetingCalculation(mStartMeeting, mDuration), mParticipants, mRoom);
+    }
+
     private void updateListOfRoomSelectable() {
         if (mRoomReadyToBeSelected.getValue()) {
             List<Meeting> meetingList = new ArrayList<>();
             List<Room> roomList = new ArrayList<>();
             roomList.addAll(mRoomRepository.getRooms());
-            long startMeeting = mStartMeeting;
-            long endMeeting = endMeetingCalculation(mStartMeeting, mDuration);
+            long startMeeting = mCalendar.getTimeInMillis();
+            long endMeeting = endMeetingCalculation(startMeeting, mDuration);
 
             if (mMeetingRepository.getMeetingsLiveData().getValue() != null) {
                 meetingList.addAll(mMeetingRepository.getMeetingsLiveData().getValue());
@@ -210,7 +206,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     }
 
     private void durationToLong() {
-        mDuration = ((mHourNumberPicker * 60) + mMinuteNumberPicker) * MINUTE_TO_MILLIS;
+        mDuration = ((mHour * 60) + mMinute) * MINUTE_TO_MILLIS;
     }
 
     @Override
@@ -218,15 +214,14 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String formattedDate = utility.formatDate(mCalendar,DATE_FORMAT);
-        mDateMutableLiveData.setValue(formattedDate);
+        mDateMutableLiveData.setValue(utility.formatDate(mCalendar, DATE_FORMAT));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mCalendar.set(Calendar.MINUTE, minute);
-        mTimeMutableLiveData.setValue(utility.formatDate(mCalendar,TIME_FORMAT));
+        mTimeMutableLiveData.setValue(utility.formatDate(mCalendar, TIME_FORMAT));
     }
 
     private boolean isAvailableTime(
@@ -235,7 +230,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
             long startCurrentMeeting,
             long endCurrentMeeting
     ) {
-        return (startDesiredMeeting > endCurrentMeeting && endDesiredMeeting < startCurrentMeeting);
+        return (startDesiredMeeting > endCurrentMeeting || endDesiredMeeting < startCurrentMeeting);
     }
 
     public LiveData<Boolean> isMeetingReadyToCreate() {
@@ -262,7 +257,17 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         return mDurationMutableLiveData;
     }
 
-    public interface DurationListener {
-        void durationEntered(String duration);
+    public int getHour() {return mHour;}
+
+    public int getMinute() {return mMinute / 15;}
+
+    public void showTimePicker(Context context) {
+        DialogFragment timeFragment = new TimePickerFragment(mCalendar);
+        timeFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "timePicker");
+    }
+
+    public void showDatePicker(Context context) {
+        DialogFragment dateFragment = new DatePickerFragment(mCalendar);
+        dateFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datePicker");
     }
 }
