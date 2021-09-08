@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
-import gaetan.renault.mareu.R;
 
 public class RoomRepository {
 
@@ -25,7 +24,7 @@ public class RoomRepository {
         mRooms.add(new Room(9, "Salle 10", 20));
     }
 
-    private static class RoomRepositoryHolder{
+    private static class RoomRepositoryHolder {
         private final static RoomRepository INSTANCE = new RoomRepository();
     }
 

@@ -2,26 +2,18 @@ package gaetan.renault.mareu.utils;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStore;
 
 import gaetan.renault.mareu.R;
 import gaetan.renault.mareu.ViewModelFactory;
-import gaetan.renault.mareu.databinding.DurationDialogBinding;
 import gaetan.renault.mareu.ui.create.CreateMeetingViewModel;
 
 public class DurationDialog extends AppCompatDialogFragment {
@@ -41,10 +33,11 @@ public class DurationDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.duration_dialog, null);
 
-        CreateMeetingViewModel viewModel = new ViewModelProvider(requireActivity(),ViewModelFactory.getInstance()).get(CreateMeetingViewModel.class);
+        CreateMeetingViewModel viewModel = new ViewModelProvider(requireActivity(), ViewModelFactory.getInstance()).get(CreateMeetingViewModel.class);
 
         builder.setView(view)
-                .setNegativeButton("Annuler", (dialog, which) -> {})
+                .setNegativeButton("Annuler", (dialog, which) -> {
+                })
                 .setPositiveButton("Ok", (dialog, which) -> viewModel.onDurationOkClicked(mHourNumberPicker.getValue(),
                         mMinuteNumberPicker.getValue()));
 

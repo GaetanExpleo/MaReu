@@ -4,8 +4,10 @@
     <string name="participants_hint">Participants</string>
     <string name="meeting_title">%s - %s - %s</string>
     <string name="date_hint">Date</string>
-    <string name="hour_hint">Time</string>
+    <string name="hour_hint">Heure</string>
     <string name="duration_dialog_title">Durée de la réunion</string>
     <string name="dialog_ok_button">OK</string>
     <string name="duration_hint">Durée</string>
+    <string name="Salle">Salle</string>
+    <string name="creation">Créer</string>
 </resources>

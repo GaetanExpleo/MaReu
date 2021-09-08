@@ -1,12 +1,9 @@
 package gaetan.renault.mareu.Repository;
 
-import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +39,7 @@ public class MeetingRepository {
         if (mMeetingLiveData.getValue() != null)
             currentList.addAll(mMeetingLiveData.getValue());
 
-        currentList.add(new Meeting(id, topic, participants, startMeeting,endMeeting, room));
+        currentList.add(new Meeting(id, topic, participants, startMeeting, endMeeting, room));
         id++;
 
         mMeetingLiveData.setValue(currentList);

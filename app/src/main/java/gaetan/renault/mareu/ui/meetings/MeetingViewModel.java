@@ -67,26 +67,14 @@ public class MeetingViewModel extends ViewModel {
 
         LiveData<List<Meeting>> meetingLiveData = mMeetingRepository.getMeetingsLiveData();
 
-        meetingMediatorLiveData.addSource(meetingLiveData, new Observer<List<Meeting>>() {
-            @Override
-            public void onChanged(List<Meeting> meetings) {
-                meetingMediatorLiveData.setValue(combine(meetings, mListRoomIdMutableLiveData.getValue(), mListHourMutableLiveData.getValue()));
-            }
-        });
+        meetingMediatorLiveData.addSource(meetingLiveData, meetings ->
+                meetingMediatorLiveData.setValue(combine(meetings, mListRoomIdMutableLiveData.getValue(), mListHourMutableLiveData.getValue())));
 
-        meetingMediatorLiveData.addSource(mListRoomIdMutableLiveData, new Observer<List<Integer>>() {
-            @Override
-            public void onChanged(List<Integer> roomIds) {
-                meetingMediatorLiveData.setValue(combine(meetingLiveData.getValue(), roomIds, mListHourMutableLiveData.getValue()));
-            }
-        });
+        meetingMediatorLiveData.addSource(mListRoomIdMutableLiveData, roomIds ->
+                meetingMediatorLiveData.setValue(combine(meetingLiveData.getValue(), roomIds, mListHourMutableLiveData.getValue())));
 
-        meetingMediatorLiveData.addSource(mListHourMutableLiveData, new Observer<List<Integer>>() {
-            @Override
-            public void onChanged(List<Integer> hours) {
-                meetingMediatorLiveData.setValue(combine(meetingLiveData.getValue(), mListRoomIdMutableLiveData.getValue(), hours));
-            }
-        });
+        meetingMediatorLiveData.addSource(mListHourMutableLiveData, hours ->
+                meetingMediatorLiveData.setValue(combine(meetingLiveData.getValue(), mListRoomIdMutableLiveData.getValue(), hours)));
 
         return meetingMediatorLiveData;
     }

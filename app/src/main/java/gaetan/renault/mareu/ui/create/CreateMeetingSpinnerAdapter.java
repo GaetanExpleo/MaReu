@@ -5,14 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.R;
-import gaetan.renault.mareu.Repository.RoomRepository;
 
 public class CreateMeetingSpinnerAdapter extends BaseAdapter {
 
@@ -48,7 +46,7 @@ public class CreateMeetingSpinnerAdapter extends BaseAdapter {
         int[] colors = parent.getContext().getResources().getIntArray(R.array.color_rooms);
         icon.setColorFilter(colors[currentRoom.getId()]);
         name.setText(currentRoom.getName());
-        capacity.setText("Capacity: " + currentRoom.getCapacity());
+        capacity.setText("Capacité: " + currentRoom.getCapacity());
 
         return row;
     }

@@ -1,7 +1,5 @@
 package gaetan.renault.mareu.utils;
 
-
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -50,5 +48,4 @@ public final class utility {
         String formattedDate = dateFormat.format(time);
         return formattedDate;
     }
-
 }

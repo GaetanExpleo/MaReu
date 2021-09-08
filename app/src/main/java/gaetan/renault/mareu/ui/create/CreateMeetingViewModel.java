@@ -57,7 +57,6 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     private final MutableLiveData<String> mDurationMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mRoomReadyToBeSelected = new MutableLiveData<>();
     private final MutableLiveData<List<Room>> mRoomsListMutableLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> mParticipantMutableLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<String> mDateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> mTimeMutableLiveData = new MutableLiveData<>();
@@ -80,28 +79,25 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         verifiedInputs();
     }
 
-    public void onParticipantsChanged(@NonNull String participants) {
-        String participantsText = "";
+    public boolean isEmailAddressValid(String emailAddress){
         mParticipants.clear();
 
-        String[] participantsList = participants.split("[,; \n]");
+        String[] participantsList = emailAddress.replace(" ","").split("[,; \n]");
+        boolean validEmail = true;
 
         for (String participant : participantsList) {
             String participantCleaned = participant.trim();
 
-            if (!participantCleaned.isEmpty() && isValidEmail(participantCleaned)) {
+            if (!participantCleaned.isEmpty() && isValidEmail(participantCleaned))  {
                 mParticipants.add(participantCleaned);
-                if (participantsText == "") {
-                    participantsText = participantCleaned;
-                } else {
-                    participantsText += ("; " + participantCleaned);
-                }
+            } else {
+                validEmail = false;
             }
         }
 
-
-        isParticipantsOk = (mParticipants.size() > 0);
+        isParticipantsOk = validEmail && mParticipants.size() > 0;
         verifiedInputs();
+        return validEmail;
     }
 
     private boolean isValidEmail(String emailAddress) {
@@ -158,6 +154,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         }
 
         durationToLong();
+        updateListOfRoomSelectable();
     }
 
     public void onCreateButtonClicked() {
@@ -215,6 +212,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         mDateMutableLiveData.setValue(utility.formatDate(mCalendar, DATE_FORMAT));
+        updateListOfRoomSelectable();
     }
 
     @Override
@@ -230,7 +228,7 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
             long startCurrentMeeting,
             long endCurrentMeeting
     ) {
-        return (startDesiredMeeting > endCurrentMeeting || endDesiredMeeting < startCurrentMeeting);
+        return (startDesiredMeeting >= endCurrentMeeting || endDesiredMeeting <= startCurrentMeeting);
     }
 
     public LiveData<Boolean> isMeetingReadyToCreate() {

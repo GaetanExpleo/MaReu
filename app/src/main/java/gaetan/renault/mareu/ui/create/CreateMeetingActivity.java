@@ -1,15 +1,14 @@
 package gaetan.renault.mareu.ui.create;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -67,12 +66,19 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-//        mBinding.meetingParticipantsTiet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//
-//            }
-//        });
+        mBinding.meetingParticipantsTiet.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (mViewModel.isEmailAddressValid(mBinding.meetingParticipantsTiet.getText().toString())){
+                    mBinding.meetingParticipantsTil.setErrorEnabled(false);
+                    mBinding.meetingParticipantsTiet.setError(null);
+                } else {
+                    mBinding.meetingParticipantsTil.setErrorEnabled(true);
+                    mBinding.meetingParticipantsTil.setError("Au moins une addresse mail est au mauvais format");
+                }
+            }
+        });
+
+
         mBinding.meetingParticipantsTiet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,7 +92,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void afterTextChanged(Editable s) {
-                mViewModel.onParticipantsChanged(s.toString());
+                if (s.toString().isEmpty()) mViewModel.isEmailAddressValid(s.toString());
             }
         });
 
@@ -183,6 +189,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        mBinding.meetingTopicTiet.requestFocus();
         switch (v.getId()) {
             case R.id.create_button:
                 mViewModel.onCreateButtonClicked();

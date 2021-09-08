@@ -1,6 +1,5 @@
 package gaetan.renault.mareu.ui.meetings;
 
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,22 +34,17 @@ public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.Ho
     public void onBindViewHolder(@NonNull HourFilterAdapter.HourFilterViewHolder holder, int position) {
         int currentHour = sHourList.get(position);
         holder.mTextView.setText(String.format("%sh%s",String.valueOf(currentHour),"00"));
-        holder.mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHourSelected(currentHour);
-                v.setSelected(!v.isSelected());
-                if (v.isSelected()){
-                    holder.mTextView.setTextColor(v.getResources().getColor(R.color.white));
-                    holder.mView.setVisibility(View.VISIBLE);
-                } else {
-                    holder.mTextView.setTextColor(v.getResources().getColor(R.color.gray));
-                    holder.mView.setVisibility(View.INVISIBLE);
-                }
+        holder.mTextView.setOnClickListener(v -> {
+            mListener.onHourSelected(currentHour);
+            v.setSelected(!v.isSelected());
+            if (v.isSelected()){
+                holder.mTextView.setTextColor(v.getResources().getColor(R.color.white));
+                holder.mView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mTextView.setTextColor(v.getResources().getColor(R.color.gray));
+                holder.mView.setVisibility(View.INVISIBLE);
             }
         });
-
-
     }
 
     @Override
