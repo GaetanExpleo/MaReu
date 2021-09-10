@@ -16,7 +16,7 @@ public class MeetingRepository {
     private final MutableLiveData<List<Meeting>> mMeetingLiveData = new MutableLiveData<>();
     private int id = 0;
 
-    private MeetingRepository() {
+    MeetingRepository() {
     }
 
     private static class MeetingRepositoryHolder {

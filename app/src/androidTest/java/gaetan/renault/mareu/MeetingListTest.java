@@ -170,9 +170,9 @@ public class MeetingListTest {
         onView(allOf(isDisplayed(), withId(R.id.meeting_participants_tiet))).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.meeting_topic_tiet))).perform(click(), closeSoftKeyboard());
 //        onView(allOf(isDisplayed(), withId(R.id.date_tiet))).perform(replaceText(date));
-        onView(allOf(isDisplayed(),withId(R.id.date_tiet))).perform(click());
+//        onView(allOf(isDisplayed(),withId(R.id.date_tiet))).perform(click());
         onData(withClassName(Matchers.equalTo(DatePickerFragment.class.getName()))).perform(PickerActions.setDate(2021,9,7));
-        onData(withId(android.R.id.button1)).perform(click());
+//        onData(withId(android.R.id.button1)).perform(click());
         onView(withClassName(Matchers.equalTo(TimePickerFragment.class.getName()))).perform(PickerActions.setTime(10,0));
 //        onView(allOf(isDisplayed(), withId(R.id.time_tiet))).perform(replaceText(hour));
         onView(allOf(isDisplayed(), withId(R.id.duration_tiet))).perform(replaceText(duration));
