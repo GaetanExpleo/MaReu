@@ -1,4 +1,4 @@
-package gaetan.renault.mareu.ui.meetings;
+package gaetan.renault.mareu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +12,7 @@ public class utilsForTest {
         return ((hour * 60) + minute) * 60000;
     }
 
-    private static final String MEETING_TOPIC = "Réunion";
+    private static final String MEETING_TOPIC = "Réunion ";
     private static final List<String> MEETING_PARTICIPANTS = Arrays.asList("participant1@lamzone.com", "paticipant2@lamzone.com", "participant3@lamzone.com");
     private static final long START_MEETING_16h = 1627653600000L; //16h
     private static final long START_MEETING_10h = 1631088000000L; //10h

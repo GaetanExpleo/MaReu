@@ -33,7 +33,6 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
     private final RoomRepository mRoomRepository;
 
     private static final long MINUTE_TO_MILLIS = 60000;
-    private static final String EMAIL_FORMAT = ".+@.+\\..+";
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final String TIME_FORMAT = "HH:mm";
 
@@ -79,16 +78,16 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         verifiedInputs();
     }
 
-    public boolean isEmailAddressValid(String emailAddress){
+    public boolean isEmailAddressValid(String emailAddress) {
         mParticipants.clear();
 
-        String[] participantsList = emailAddress.replace(" ","").split("[,; \n]");
+        String[] participantsList = emailAddress.replace(" ", "").split("[,; \n]");
         boolean validEmail = true;
 
         for (String participant : participantsList) {
             String participantCleaned = participant.trim();
 
-            if (!participantCleaned.isEmpty() && isValidEmail(participantCleaned))  {
+            if (!participantCleaned.isEmpty() && isValidEmail(participantCleaned)) {
                 mParticipants.add(participantCleaned);
             } else {
                 validEmail = false;
@@ -255,9 +254,13 @@ public class CreateMeetingViewModel extends ViewModel implements DatePickerDialo
         return mDurationMutableLiveData;
     }
 
-    public int getHour() {return mHour;}
+    public int getHour() {
+        return mHour;
+    }
 
-    public int getMinute() {return mMinute / 15;}
+    public int getMinute() {
+        return mMinute / 15;
+    }
 
     public void showTimePicker(Context context) {
         DialogFragment timeFragment = new TimePickerFragment(mCalendar);

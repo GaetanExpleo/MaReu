@@ -38,13 +38,16 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.test:rules:1.4.0'
+    implementation 'androidx.test:runner:1.4.0'
+    implementation 'org.hamcrest:hamcrest:2.2'
 
     testImplementation 'junit:junit:4.+'
     testImplementation 'androidx.test:core:1.4.0'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    testImplementation 'org.mockito:mockito-core:2.19.0'
+    testImplementation 'org.mockito:mockito-core:3.11.1'
 
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
@@ -53,6 +56,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
-    androidTestImplementation 'com.robbypond:material-dialogs:1.0.0'
+}
 
+configurations.all{
+    resolutionStrategy.dependencySubstitution {
+        substitute module('org.hamcrest:hamcrest-core:1.3') with module('org.hamcrest:hamcrest:2.2')
+    }
 }

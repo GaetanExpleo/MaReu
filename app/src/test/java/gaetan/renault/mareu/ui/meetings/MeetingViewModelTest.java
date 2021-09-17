@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import junit.framework.TestCase;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,14 +13,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import gaetan.renault.mareu.Model.Meeting;
 import gaetan.renault.mareu.Model.Room;
 import gaetan.renault.mareu.Repository.MeetingRepository;
 import gaetan.renault.mareu.Repository.RoomRepository;
+import gaetan.renault.mareu.utilsForTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,7 +63,10 @@ public class MeetingViewModelTest extends TestCase {
         MeetingViewModel viewModel = new MeetingViewModel(mockMeetingRepository);
         viewModel.onRoomFilterSelected(0);
 
-        viewModel.getMeetingsLiveData().observeForever(meetings -> assertEquals(2, meetings.size()));
+        viewModel.getMeetingsLiveData().observeForever(meetings -> {
+            assertEquals(2, meetings.size());
+            assertTrue(meetings.get(0).getTopic() == "Réunion 1" && meetings.get(1).getTopic() == "Réunion 2");
+        });
     }
 
     @Test
@@ -75,7 +76,12 @@ public class MeetingViewModelTest extends TestCase {
         MeetingViewModel viewModel = new MeetingViewModel(mockMeetingRepository);
 
         viewModel.onHourFilterSelected(16);
-        viewModel.getMeetingsLiveData().observeForever(meetings -> assertEquals(3, meetings.size()));
+        viewModel.getMeetingsLiveData().observeForever(meetings -> {
+            assertEquals(3, meetings.size());
+            assertTrue(meetings.get(0).getTopic() == utilsForTest.TEST_MEETING1.getTopic()
+                    && meetings.get(1).getTopic() == utilsForTest.TEST_MEETING2.getTopic()
+                    && meetings.get(2).getTopic() == utilsForTest.TEST_MEETING4.getTopic());
+        });
     }
 
     @Test
@@ -85,7 +91,11 @@ public class MeetingViewModelTest extends TestCase {
         MeetingViewModel viewModel = new MeetingViewModel(mockMeetingRepository);
 
         viewModel.onHourFilterSelected(10);
-        viewModel.getMeetingsLiveData().observeForever(meetings -> assertEquals(2, meetings.size()));
+        viewModel.getMeetingsLiveData().observeForever(meetings -> {
+            assertEquals(2, meetings.size());
+            assertTrue(meetings.get(0).getTopic() == utilsForTest.TEST_MEETING3.getTopic()
+            && meetings.get(1).getTopic() == utilsForTest.TEST_MEETING5.getTopic());
+        });
     }
 
     @Test
@@ -97,6 +107,4 @@ public class MeetingViewModelTest extends TestCase {
         viewModel.onHourFilterSelected(9);
         viewModel.getMeetingsLiveData().observeForever(meetings -> assertEquals(0, meetings.size()));
     }
-
-
 }

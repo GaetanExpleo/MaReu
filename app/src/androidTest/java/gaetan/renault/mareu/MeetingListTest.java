@@ -1,18 +1,12 @@
 package gaetan.renault.mareu;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -27,32 +21,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
-import gaetan.renault.mareu.Model.Meeting;
-import gaetan.renault.mareu.Model.Room;
-import gaetan.renault.mareu.Repository.RoomRepository;
 import gaetan.renault.mareu.ui.meetings.MeetingsActivity;
-import gaetan.renault.mareu.utils.DatePickerFragment;
 import gaetan.renault.mareu.utils.DeleteViewAction;
-import gaetan.renault.mareu.utils.TimePickerFragment;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.doubleClick;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static gaetan.renault.mareu.utils.RecyclerViewItemCountAssertion.withItemCount;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -68,35 +54,38 @@ public class MeetingListTest {
 
     private MeetingsActivity mActivity;
 
+    private final LocalDate DATE = java.time.LocalDate.now();
+    private final int MINUTE = 0;
+
     //First meeting
     private final String FIRST_TOPIC = "Réunion 1";
     private final String FIRST_PARTICIPANT = "gaetan@lamzone.com";
-    private final String FIRST_DATE = "06/09/2021";
-    private final String FIRST_HOUR = "10:00";
+    private final int FIRST_HOUR = 10;
     private final String FIRST_DURATION = "1h";
     private final int ID_FIRST_ROOM = 0;
 
     //Second meeting
     private final String SECOND_TOPIC = "Réunion 2";
     private final String SECOND_PARTICIPANT = "gaetan@lamzone.com";
-    private final String SECOND_DATE = "06/09/2021";
-    private final String SECOND_HOUR = "11:00";
+    private final int SECOND_HOUR = 11;
     private final String SECOND_DURATION = "1h";
     private final int ID_SECOND_ROOM = 1;
 
     //Third meeting
     private final String THIRD_TOPIC = "Réunion 3";
     private final String THIRD_PARTICIPANT = "gaetan@lamzone.com";
-    private final String THIRD_DATE = "06/09/2021";
-    private final String THIRD_HOUR = "10:00";
+    private final int THIRD_HOUR = 10;
     private final String THIRD_DURATION = "1h";
     private final int ID_THIRD_ROOM = 0;
 
     @Before
     public void setUp() {
         activityScenario = ActivityScenario.launch(MeetingsActivity.class);
-        activityScenario.onActivity(activity -> mActivity = activity);
-        assertThat(activityScenario, notNullValue());
+//        activityScenario.onActivity(activity -> {
+//            mActivity = activity;
+//        });
+//
+//        assertThat(activityScenario, notNullValue());
     }
 
     @After
@@ -106,21 +95,21 @@ public class MeetingListTest {
 
     @Test
     public void myMeetingList_addMeeting_shouldAddItem() throws InterruptedException {
-        onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(0));
-        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, FIRST_DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
-        onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(1));
+        onView(withId(R.id.list_meeting_recyclerview)).check(withItemCount(0));
+        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
+        onView(withId(R.id.list_meeting_recyclerview)).check(withItemCount(1));
         Thread.sleep(500);
-        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, SECOND_DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
-        onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(2));
+        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
+        onView(withId(R.id.list_meeting_recyclerview)).check(withItemCount(2));
     }
 
     @Test
     public void myMeetingList_deleteMeeting_shouldDeleteMeeting() throws InterruptedException {
-        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, FIRST_DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
+        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
         Thread.sleep(500);
-        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, SECOND_DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
+        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
         Thread.sleep(500);
-        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, THIRD_DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
+        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(3));
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).
                 perform(RecyclerViewActions.actionOnItemAtPosition(0, new DeleteViewAction()));
@@ -129,29 +118,29 @@ public class MeetingListTest {
 
     @Test
     public void myMeetingList_RoomFiltered_shouldDisplayMeetingWithRoomSelected() throws InterruptedException {
-        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, FIRST_DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
+        LocalDate date = LocalDate.now();
+        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
         Thread.sleep(500);
-        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, SECOND_DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
+        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
         Thread.sleep(500);
-        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, THIRD_DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
+        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
         Thread.sleep(500);
         onView(allOf(isDisplayed(), withId(R.id.menu_filter_room))).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_room_recyclerview))).
-                perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
+                perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(2));
     }
-
     @Test
     public void myMeetingList_HourFiltered_shouldDisplayMeetingWithHourSelected() throws InterruptedException {
-        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, FIRST_DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
+        createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
         Thread.sleep(500);
-        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, SECOND_DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
+        createMeeting(SECOND_TOPIC, SECOND_PARTICIPANT, DATE, SECOND_HOUR, SECOND_DURATION, ID_SECOND_ROOM);
         Thread.sleep(500);
-        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, THIRD_DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
+        createMeeting(THIRD_TOPIC, THIRD_PARTICIPANT, DATE, THIRD_HOUR, THIRD_DURATION, ID_THIRD_ROOM);
         Thread.sleep(500);
         onView(allOf(isDisplayed(), withId(R.id.menu_filter_hour))).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_hour_recyclerview))).
-                perform(RecyclerViewActions.actionOnItemAtPosition(5,click()));
+                perform(RecyclerViewActions.actionOnItemAtPosition(5, click()));
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(2));
 
     }
@@ -159,8 +148,8 @@ public class MeetingListTest {
     public void createMeeting(
             @NonNull final String topic,
             @NonNull final String participants,
-            @NonNull final String date,
-            @NonNull final String hour,
+            @NonNull final LocalDate date,
+            @NonNull final int hour,
             @NonNull final String duration,
             @NonNull final int idRoom
     ) throws InterruptedException {
@@ -169,17 +158,21 @@ public class MeetingListTest {
         onView(allOf(isDisplayed(), withId(R.id.meeting_participants_tiet))).perform(replaceText(participants));
         onView(allOf(isDisplayed(), withId(R.id.meeting_participants_tiet))).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.meeting_topic_tiet))).perform(click(), closeSoftKeyboard());
-//        onView(allOf(isDisplayed(), withId(R.id.date_tiet))).perform(replaceText(date));
-//        onView(allOf(isDisplayed(),withId(R.id.date_tiet))).perform(click());
-        onData(withClassName(Matchers.equalTo(DatePickerFragment.class.getName()))).perform(PickerActions.setDate(2021,9,7));
-//        onData(withId(android.R.id.button1)).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePickerFragment.class.getName()))).perform(PickerActions.setTime(10,0));
-//        onView(allOf(isDisplayed(), withId(R.id.time_tiet))).perform(replaceText(hour));
+        onView(allOf(isDisplayed(), withId(R.id.date_tiet))).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(date.getYear(),date.getMonthValue(),date.getDayOfMonth()));
+        onView(withId(android.R.id.button1)).perform(click());
+        onView(allOf(isDisplayed(), withId(R.id.time_tiet))).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
+                .perform(PickerActions.setTime(hour, MINUTE));
+        onView(withId(android.R.id.button1)).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.duration_tiet))).perform(replaceText(duration));
-        onData(allOf())
-                .inAdapterView(withId(R.id.room_spinner))
-                .atPosition(idRoom)
-                .perform(doubleClick());
+        onView(withId(R.id.room_spinner)).perform(scrollTo(), click());
+        onData(anything())
+                .inAdapterView(childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(idRoom).perform(click());
         Thread.sleep(500);
         onView(allOf(isDisplayed(), withId(R.id.create_button))).perform(click());
     }

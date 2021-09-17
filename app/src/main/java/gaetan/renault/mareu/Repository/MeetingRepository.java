@@ -65,4 +65,9 @@ public class MeetingRepository {
     public LiveData<List<Meeting>> getMeetingsLiveData() {
         return mMeetingLiveData;
     }
+
+    public void resetLiveDataForTest() {
+        id = 0;
+        mMeetingLiveData.setValue(new ArrayList<>());
+    }
 }
