@@ -21,9 +21,6 @@ import gaetan.renault.mareu.utils.DurationDialog;
 
 public class CreateMeetingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String DATE_FORMAT = "dd/MM/yyyy";
-    private static final String TIME_FORMAT = "hh:mm";
-
     private ActivityCreateMeetingBinding mBinding;
     private CreateMeetingViewModel mViewModel;
     private RoomRepository mRoomRepository = RoomRepository.getInstance();
@@ -68,7 +65,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
 
         mBinding.meetingParticipantsTiet.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                if (mViewModel.isEmailAddressValid(mBinding.meetingParticipantsTiet.getText().toString())){
+                if (mViewModel.isEmailAddressValid(mBinding.meetingParticipantsTiet.getText().toString())) {
                     mBinding.meetingParticipantsTil.setErrorEnabled(false);
                     mBinding.meetingParticipantsTiet.setError(null);
                 } else {
@@ -203,7 +200,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.duration_tiet:
                 DurationDialog durationDialog = new DurationDialog();
-                durationDialog.show(getSupportFragmentManager(),"duration dialog");
+                durationDialog.show(getSupportFragmentManager(), "duration dialog");
                 break;
             default:
                 return;

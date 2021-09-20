@@ -127,9 +127,4 @@ public class MeetingsActivity extends AppCompatActivity implements
     public void onHourSelected(int hourSelected) {
         mMeetingViewModel.onHourFilterSelected(hourSelected);
     }
-
-    @VisibleForTesting
-    public void addSomeMeetings(){
-
-    }
 }

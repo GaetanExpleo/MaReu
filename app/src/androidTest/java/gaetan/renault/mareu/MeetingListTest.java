@@ -16,7 +16,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +38,6 @@ import static gaetan.renault.mareu.utils.RecyclerViewItemCountAssertion.withItem
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -81,16 +78,6 @@ public class MeetingListTest {
     @Before
     public void setUp() {
         activityScenario = ActivityScenario.launch(MeetingsActivity.class);
-//        activityScenario.onActivity(activity -> {
-//            mActivity = activity;
-//        });
-//
-//        assertThat(activityScenario, notNullValue());
-    }
-
-    @After
-    public void tearDown() {
-        mActivity = null;
     }
 
     @Test
@@ -130,6 +117,7 @@ public class MeetingListTest {
                 perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(2));
     }
+
     @Test
     public void myMeetingList_HourFiltered_shouldDisplayMeetingWithHourSelected() throws InterruptedException {
         createMeeting(FIRST_TOPIC, FIRST_PARTICIPANT, DATE, FIRST_HOUR, FIRST_DURATION, ID_FIRST_ROOM);
@@ -140,7 +128,7 @@ public class MeetingListTest {
         Thread.sleep(500);
         onView(allOf(isDisplayed(), withId(R.id.menu_filter_hour))).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_hour_recyclerview))).
-                perform(RecyclerViewActions.actionOnItemAtPosition(5, click()));
+                perform(RecyclerViewActions.actionOnItemAtPosition(4, click()));
         onView(allOf(isDisplayed(), withId(R.id.list_meeting_recyclerview))).check(withItemCount(2));
 
     }
@@ -160,7 +148,7 @@ public class MeetingListTest {
         onView(allOf(isDisplayed(), withId(R.id.meeting_topic_tiet))).perform(click(), closeSoftKeyboard());
         onView(allOf(isDisplayed(), withId(R.id.date_tiet))).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(date.getYear(),date.getMonthValue(),date.getDayOfMonth()));
+                .perform(PickerActions.setDate(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
         onView(allOf(isDisplayed(), withId(R.id.time_tiet))).perform(click());
         onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))

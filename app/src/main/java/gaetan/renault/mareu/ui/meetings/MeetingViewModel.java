@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.sql.Timestamp;
@@ -90,8 +89,8 @@ public class MeetingViewModel extends ViewModel {
             meetingList = getMeetingsFiltered(meetingList, roomIds, "room");
         }
 
-        if (hours != null && !hours.isEmpty()){
-            meetingList = getMeetingsFiltered(meetingList, hours , "hours");
+        if (hours != null && !hours.isEmpty()) {
+            meetingList = getMeetingsFiltered(meetingList, hours, "hours");
         }
 
         return meetingList;
@@ -102,14 +101,14 @@ public class MeetingViewModel extends ViewModel {
 
         if (filterType == "room") {
             for (Meeting meeting : meetings) {
-                if (filterValues.contains(meeting.getRoom().getId())){
+                if (filterValues.contains(meeting.getRoom().getId())) {
                     meetingList.add(meeting);
                 }
             }
         } else {
             for (Meeting meeting : meetings) {
                 Timestamp timestamp = new Timestamp(meeting.getStartMeeting());
-                if (filterValues.contains(timestamp.getHours())){
+                if (filterValues.contains(timestamp.getHours())) {
                     meetingList.add(meeting);
                 }
             }

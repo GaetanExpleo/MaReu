@@ -94,7 +94,7 @@ public class MeetingViewModelTest extends TestCase {
         viewModel.getMeetingsLiveData().observeForever(meetings -> {
             assertEquals(2, meetings.size());
             assertTrue(meetings.get(0).getTopic() == utilsForTest.TEST_MEETING3.getTopic()
-            && meetings.get(1).getTopic() == utilsForTest.TEST_MEETING5.getTopic());
+                    && meetings.get(1).getTopic() == utilsForTest.TEST_MEETING5.getTopic());
         });
     }
 

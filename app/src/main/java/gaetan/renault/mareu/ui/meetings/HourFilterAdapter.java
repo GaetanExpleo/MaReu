@@ -27,17 +27,17 @@ public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.Ho
     @Override
     public HourFilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new HourFilterViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.meeting_hour_item,parent,false));
+                .inflate(R.layout.meeting_hour_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull HourFilterAdapter.HourFilterViewHolder holder, int position) {
         int currentHour = sHourList.get(position);
-        holder.mTextView.setText(String.format("%sh%s",String.valueOf(currentHour),"00"));
+        holder.mTextView.setText(String.format("%sh%s", String.valueOf(currentHour), "00"));
         holder.mTextView.setOnClickListener(v -> {
             mListener.onHourSelected(currentHour);
             v.setSelected(!v.isSelected());
-            if (v.isSelected()){
+            if (v.isSelected()) {
                 holder.mTextView.setTextColor(v.getResources().getColor(R.color.white));
                 holder.mView.setVisibility(View.VISIBLE);
             } else {
@@ -64,7 +64,7 @@ public class HourFilterAdapter extends RecyclerView.Adapter<HourFilterAdapter.Ho
         }
     }
 
-    public interface HourSelectedListener{
+    public interface HourSelectedListener {
         void onHourSelected(int hourSelected);
     }
 }

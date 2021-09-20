@@ -46,7 +46,7 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
     @Override
     public MeetingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         color = parent.getContext().getResources().getIntArray(R.array.color_rooms);
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.meeting_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.meeting_item, parent, false);
         return new MeetingViewHolder(view);
     }
 
@@ -55,8 +55,8 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
         Meeting currentMeeting = getItem(position);
         Timestamp timestamp = new Timestamp(currentMeeting.getStartMeeting());
         String meetingHour = timestamp.getHours() + "h" + utility.formatOneInTwoNumber(timestamp.getMinutes());
-        holder.mTitleMeeting.setText(String.format("%s - %s - %s", currentMeeting.getTopic(),meetingHour,currentMeeting.getRoom().getName()));
-        holder.mParticipantsMeeting.setText(currentMeeting.getParticipants().toString().replaceAll("\\[|\\]",""));
+        holder.mTitleMeeting.setText(String.format("%s - %s - %s", currentMeeting.getTopic(), meetingHour, currentMeeting.getRoom().getName()));
+        holder.mParticipantsMeeting.setText(currentMeeting.getParticipants().toString().replaceAll("\\[|\\]", ""));
         holder.mMeetingImageView.setColorFilter(color[currentMeeting.getRoom().getId()]);
         holder.mDeleteButton.setOnClickListener(v -> mListener.onDeleteMeting(currentMeeting.getId()));
 
@@ -69,8 +69,8 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
     }
 
     private String toastMessage(Meeting currentMeeting) {
-        return "id: " + currentMeeting.getId() + " startMeeting: " + utility.formatDate(currentMeeting.getStartMeeting(),"HH:mm") +
-                "\nendMeeting: " + utility.formatDate(currentMeeting.getEndMeeting(),"HH:mm");
+        return "id: " + currentMeeting.getId() + " startMeeting: " + utility.formatDate(currentMeeting.getStartMeeting(), "HH:mm") +
+                "\nendMeeting: " + utility.formatDate(currentMeeting.getEndMeeting(), "HH:mm");
     }
 
     public class MeetingViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +89,7 @@ public class MeetingsAdapter extends ListAdapter<Meeting, MeetingsAdapter.Meetin
         }
     }
 
-    public interface DeleteMeetingListener{
+    public interface DeleteMeetingListener {
         void onDeleteMeting(int meetingId);
     }
 }

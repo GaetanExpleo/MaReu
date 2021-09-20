@@ -47,13 +47,17 @@ public class CreateMeetingViewModelTest {
 
         //Given
         mViewModel.onTopicChanged(utilsForTest.TEST_MEETING1.getTopic());
+        mViewModel.onDateSet(null, 2021,6,30);
+        mViewModel.onTimeSet(null, 16,0);
+        mViewModel.onDurationOkClicked(0,2);
+        mViewModel.onRoomChanged(RoomRepository.getInstance().getRooms().get(0));
         //When
         mViewModel.onCreateButtonClicked();
         //then
         verify(mockMeetingRepository, times(1)).addMeeting(utilsForTest.TEST_MEETING1.getTopic(),
                 utilsForTest.TEST_MEETING1.getStartMeeting(),
                 utilsForTest.TEST_MEETING1.getEndMeeting(),
-                utilsForTest.TEST_MEETING1.getParticipants(),
+                new ArrayList<>(),
                 utilsForTest.TEST_MEETING1.getRoom());
     }
 }
